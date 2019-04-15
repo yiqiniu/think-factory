@@ -12,7 +12,6 @@ declare (strict_types = 1);
 
 namespace think;
 
-
 use InvalidArgumentException;
 use think\helper\Str;
 
@@ -60,12 +59,29 @@ abstract class Factory
     }
 
     /**
+     * 获取驱动类
+     * @param $driver
+     * @return string
+     */
+    protected function resolveClass($driver)
+    {
+        if ($this->namespace || false !== strpos($driver, '\\')) {
+            $class = false !== strpos($driver, '\\') ? $driver : $this->namespace . Str::studly($driver);
+
+            if (class_exists($class)) {
+                return $class;
+            }
+        }
+
+        throw new InvalidArgumentException("Driver [$driver] not supported.");
+    }
+
+    /**
      * 创建驱动
      *
-     * @param  string $driver
+     * @param string $driver
      * @return mixed
      *
-     * @throws \InvalidArgumentException
      */
     protected function createDriver($driver)
     {
@@ -75,15 +91,9 @@ abstract class Factory
             return $this->$method();
         }
 
-        if ($this->namespace || false !== strpos($driver, '\\')) {
-            $class = false !== strpos($driver, '\\') ? $driver : $this->namespace . Str::studly($driver);
+        $class = $this->resolveClass($driver);
 
-            if (class_exists($class)) {
-                return $this->app->make($class);
-            }
-        }
-
-        throw new InvalidArgumentException("Driver [$driver] not supported.");
+        return $this->app->make($class);
     }
 
     /**
