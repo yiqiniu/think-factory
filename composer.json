@@ -1,5 +1,5 @@
 {
-    "name": "topthink/think-factory",
+    "name": "yiqiniu/think-factory",
     "type": "library",
     "license": "Apache-2.0",
     "authors": [
@@ -10,7 +10,7 @@
     ],
     "require": {
         "topthink/think-helper": "^3.0.0",
-        "topthink/framework": "^6.0.0"
+        "yiqiniu/framework": "^6.0.*.dev"
     },
     "autoload": {
         "psr-4": {
